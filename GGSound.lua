@@ -158,7 +158,6 @@ function GGSound:removeAll()
 			audio.dispose( v.handle )
 		end
 		v.handle = nil
-		v = nil
 	end
 	self.sounds = {}
 	
@@ -180,7 +179,6 @@ function GGSound:destroy()
 	self:removeAll()
 
 	self.sounds = nil
-	self = nil
 	
 end
 
