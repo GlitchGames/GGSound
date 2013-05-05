@@ -96,7 +96,7 @@ end
 
 --- Plays a pre-added sound file.
 -- @param name The name of the sound.
-function GGSound:play( name )
+function GGSound:play( name, options )
 
 	if not self.sounds or not self.sounds[ name ] or not self.sounds[ name ].handle then
 		return
@@ -106,7 +106,7 @@ function GGSound:play( name )
 		return
 	end
 	
-	local options = {}
+	options = options or {}
 	
 	if self.channels then
 		
