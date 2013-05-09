@@ -96,7 +96,8 @@ end
 
 --- Plays a pre-added sound file.
 -- @param name The name of the sound.
-function GGSound:play( name )
+-- @param options The options for the sound, optional.
+function GGSound:play( name, options )
 
 	if not self.sounds or not self.sounds[ name ] or not self.sounds[ name ].handle then
 		return
@@ -106,7 +107,7 @@ function GGSound:play( name )
 		return
 	end
 	
-	local options = {}
+	local options = options or {}
 	
 	if self.channels then
 		
@@ -146,6 +147,22 @@ end
 -- @return The volume.
 function GGSound:getVolume()
 	return self.volume
+end
+
+--- Finds a free channel.
+-- @return The channel number. Nil if none found.
+function GGSound:findFreeChannel()
+
+	if self.channels then
+		for i = 1, #self.channels, 1 do
+			if not audio.isChannelActive( self.channels[ i ] ) then
+				return self.channels[ i ]
+			end
+		end
+	else
+		return audio.findFreeChannel()
+	end
+	
 end
 
 --- Removes all loaded sounds and destroys them.
