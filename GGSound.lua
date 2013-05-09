@@ -130,6 +130,10 @@ function GGSound:setVolume( volume )
 		self.volume = 0
 	end
 	
+	for i = 1, #self.channels, 1 do
+		audio.setVolume( self.volume, { channel = self.channels[ i ] } )
+	end
+	
 end
 
 --- Gets the volume of the sound library.
