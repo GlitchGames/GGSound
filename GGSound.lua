@@ -109,18 +109,7 @@ function GGSound:play( name, options )
 	
 	local options = options or {}
 	
-	if self.channels then
-		
-		for i = 1, #self.channels, 1 do
-			if not audio.isChannelActive( self.channels[ i ] ) then
-				options.channel = self.channels[ i ]
-				break
-			end
-			
-		end
-	else
-		options.channel = audio.findFreeChannel()
-	end
+	options.channel = self:findFreeChannel()
 	
 	if options.channel then
 		audio.setVolume( self.volume, { channel = options.channel } )
