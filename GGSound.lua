@@ -62,16 +62,23 @@ end
 -- @param pathOrHandle The path to the sound file or a pre-loaded sound handle.
 -- @param name The name of the sound.
 -- @param baseDirectory The base directory of the sound. Optional, defaults to system.ResourceDirectory.
-function GGSound:add( pathOrHandle, name, baseDirectory )
+-- @param lazyLoading If true then the sound will only be loaded when it is first played. Optional, defaults to false.
+function GGSound:add( pathOrHandle, name, baseDirectory, lazyLoading )
 
 	self.sounds = self.sounds or {}
-	
-	if type( pathOrHandle ) == "string" then
-		pathOrHandle = audio.loadSound( pathOrHandle, baseDirectory or system.ResourceDirectory )
-	end
+
 	self.sounds[ name ] = {}
-	self.sounds[ name ].handle = pathOrHandle
+
+	if type( pathOrHandle ) == "string" then
+		if lazyLoading then
+			self.sounds[ name ].baseDirectory = baseDirectory or system.ResourceDirectory 
+		else
+			pathOrHandle = audio.loadSound( pathOrHandle, baseDirectory or system.ResourceDirectory )
+		end
+	end
 	
+	self.sounds[ name ].handle = pathOrHandle
+
 end
 
 -- Removes a sound from the library and destroys it.
@@ -99,10 +106,14 @@ end
 -- @param options The options for the sound, optional.
 function GGSound:play( name, options )
 
-	if not self.sounds or not self.sounds[ name ] or not self.sounds[ name ].handle then
+	if not self.sounds or not self.sounds[ name ] then
 		return
 	end
-	
+
+	if type( self.sounds[ name ].handle ) == "string" then
+		self.sounds[ name ].handle = audio.loadSound( self.sounds[ name ].handle, self.sounds[ name ].baseDirectory )
+	end
+
 	if not self.enabled then
 		return
 	end
